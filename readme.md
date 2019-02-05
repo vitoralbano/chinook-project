@@ -12,6 +12,8 @@
 
 # Answers
 ## 1.1. Which countries have more invoices?
+
+Query:
 ```sql
 SELECT 
     BillingCountry,
@@ -48,7 +50,9 @@ Result:
 | "Spain"          | "7"      |
 | "Sweden"         | "7"      |
 
-
+```sql
+-- 24 rows returned
+```
 
 ## 1.2. Which cities have the bestest clients?
 
@@ -67,6 +71,10 @@ Result:
 | BillingCity | MaxInvoice |
 |-------------|------------|
 | "Prague"    | "90.24"    |
+
+```sql
+-- 1 rows returned
+```
 
 ## 1.3. Who is the bestest client?
 
@@ -90,3 +98,7 @@ Result:
 | CustomerId | FirstName | Country          | TotalProfit |
 |------------|-----------|------------------|-------------|
 | "6"        | "Helena"  | "Czech Republic" | "49.62"     |
+
+```sql
+-- 1 rows returned
+```
