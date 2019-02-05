@@ -1,17 +1,16 @@
-# Project Chinook
-# Questions:
-1. Questions set 01
-    1. [Which countries have more invoices?](##-1.1.-Which-countries-have-more-invoices)
-    2. [Which cities have the bestest clients?](##-1.2.-Which-cities-have-the-bestest-clients)
-    3. [Who is the bestest client?](##-1.3.-Who-is-the-bestest-client?)
+# Projeto Chinook
+# Perguntas:
+1. Conjunto de perguntas 01
+    1. [Quais países possuem mais faturas?](##-1.1.-Quais-países-possuem-mais-faturas)
+    2. [Qual cidade tem os melhores clientes?](##-1.2.-Qual-cidade-tem-os-melhores-clientes)
+    3. [Quem é o melhor cliente?](##-1.3.-Quem-é-o-melhor-cliente?)
 
-# Entity Relationship Diagram
+
+# Diagrama de Entidade e Relacionamento (ERD)
 ![Chinook ERD](db/chinook-erd.png)
 
-
-
 # Answers
-## 1.1. Which countries have more invoices?
+## 1.1. Quais países possuem mais faturas?
 
 Query:
 ```sql
@@ -54,7 +53,7 @@ Result:
 -- 24 rows returned
 ```
 
-## 1.2. Which cities have the bestest clients?
+## 1.2. Qual cidade tem os melhores clientes?
 
 Query:
 ```sql
@@ -76,7 +75,7 @@ Result:
 -- 1 rows returned
 ```
 
-## 1.3. Who is the bestest client?
+## 1.3. Quem é o melhor cliente?
 
 Query:
 ```sql
