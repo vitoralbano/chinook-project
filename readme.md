@@ -21,36 +21,41 @@ FROM Invoice
 ORDER BY Invoices DESC;
 ```
 Result:
-```json
-"USA"               "91"
-"Canada"            "56"
-"Brazil"            "35"
-"France"            "35"
-"Germany"           "28"
-"United Kingdom"    "21"
-"Czech Republic"    "14"
-"Portugal"          "14"
-"India"	            "13"
-"Argentina"	    "7"
-"Australia"	    "7"
-"Austria"	    "7"
-"Belgium"	    "7"
-"Chile"	            "7"
-"Denmark"	    "7"
-"Finland"	    "7"
-"Hungary"	    "7"
-"Ireland"	    "7"
-"Italy"	            "7"
-"Netherlands"	    "7"
-"Norway"	    "7"
-"Poland"	    "7"
-"Spain"             "7"
-"Sweden"	    "7"
-```
+| BillingCountry   | Invoices |
+|------------------|----------|
+| "USA"            | "91"     |
+| "Canada"         | "56"     |
+| "Brazil"         | "35"     |
+| "France"         | "35"     |
+| "Germany"        | "28"     |
+| "United Kingdom" | "21"     |
+| "Czech Republic" | "14"     |
+| "Portugal"       | "14"     |
+| "India"          | "13"     |
+| "Argentina"      | "7"      |
+| "Australia"      | "7"      |
+| "Austria"        | "7"      |
+| "Belgium"        | "7"      |
+| "Chile"          | "7"      |
+| "Denmark"        | "7"      |
+| "Finland"        | "7"      |
+| "Hungary"        | "7"      |
+| "Ireland"        | "7"      |
+| "Italy"          | "7"      |
+| "Netherlands"    | "7"      |
+| "Norway"         | "7"      |
+| "Poland"         | "7"      |
+| "Spain"          | "7"      |
+| "Sweden"         | "7"      |
+
+
+
 ## 1.2. Which cities have the bestest clients?
+
+Query:
 ```sql
 SELECT Inv.BillingCity,
-    MAX(Inv.Total)
+    MAX(Inv.Total) MaxInvoice
 FROM 
     (SELECT BillingCity,
         SUM(Total) Total
@@ -59,17 +64,19 @@ FROM
     ORDER BY Total) Inv
 ```
 Result:
-```json
-"Prague"	"90.24"
-```
+| BillingCity | MaxInvoice |
+|-------------|------------|
+| "Prague"    | "90.24"    |
 
 ## 1.3. Who is the bestest client?
+
+Query:
 ```sql
 SELECT 
     Cus.CustomerId,
     Cus.FirstName,
     Cus.Country,
-    Cus_Profit.Total
+    Cus_Profit.Total TotalProfit
 FROM 
     (SELECT 
         Inv.CustomerId,
@@ -80,7 +87,6 @@ FROM
 JOIN Customer Cus ON Cus.CustomerId = Cus_Profit.CustomerId;
 ```
 Result:
-```json
-"6"	"Helena"	"Czech Republic"	"49.62"
-```
-
+| CustomerId | FirstName | Country          | TotalProfit |
+|------------|-----------|------------------|-------------|
+| "6"        | "Helena"  | "Czech Republic" | "49.62"     |
