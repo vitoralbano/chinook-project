@@ -29,6 +29,7 @@ FROM Invoice
 ORDER BY Invoices DESC;
 ```
 Result:
+
 | BillingCountry   | Invoices |
 | :---             | :---:    |
 | "USA"            | "91"     |
@@ -73,9 +74,11 @@ FROM
     GROUP BY BillingCity
     ORDER BY Total) Inv
 ```
+
 Result:
+
 | BillingCity | MaxInvoice |
-|-------------|------------|
+| :---        | :---:      |
 | "Prague"    | "90.24"    |
 
 ```sql
@@ -100,9 +103,11 @@ FROM
     ORDER BY 2 DESC LIMIT 1) Cus_Profit
 JOIN Customer Cus ON Cus.CustomerId = Cus_Profit.CustomerId;
 ```
+
 Result:
+
 | CustomerId | FirstName | Country          | TotalProfit |
-|------------|-----------|------------------|-------------|
+| :---:      | :---      | :---             | :---:       |
 | "6"        | "Helena"  | "Czech Republic" | "49.62"     |
 
 ```sql
@@ -132,9 +137,11 @@ WHERE invLine.TrackId IN
 GROUP BY cus.Email
 ORDER BY cus.Email;
 ```
+
 Result: 
+
 | Email                           | FirstName   | LastName       | Genre  |
-|---------------------------------|-------------|----------------|--------|
+| :---                            | :---        | :---           | :---   |
 | "aaronmitchell@yahoo.ca"        | "Aaron"     | "Mitchell"     | "Rock" |
 | "alero@uol.com.br"              | "Alexandre" | "Rocha"        | "Rock" |
 | "astrid.gruber@apple.at"        | "Astrid"    | "Gruber"       | "Rock" |
@@ -214,9 +221,11 @@ GROUP BY 1
 ORDER BY TrackCount DESC
 LIMIT 10;
 ```
+
 Result:
+
 | ArtistName                     | TrackCount |
-|--------------------------------|------------|
+| :---                           | :---:      |
 | "Led Zeppelin"                 | "114"      |
 | "U2"                           | "112"      |
 | "Deep Purple"                  | "92"       |
@@ -232,6 +241,7 @@ Result:
 -- 10 rows returned
 ```
 ## 2.3.1. Primeiro, descubra qual artista ganhou mais de acordo com InvoiceLines
+
 Query:
 ```sql
 SELECT art.ArtistId,
@@ -245,14 +255,17 @@ GROUP BY art.Name
 ORDER BY Total DESC
 LIMIT 5;
 ```
+
 Result: 
+
 | ArtistId | ArtistName     | Total              |
-|----------|----------------|--------------------|
+| :---:    | :---           | :---:              |
 | "90"     | "Iron Maiden"  | "138.6"            |
 | "150"    | "U2"           | "105.93"           |
 | "50"     | "Metallica"    | "90.0899999999999" |
 | "22"     | "Led Zeppelin" | "86.1299999999999" |
 | "149"    | "Lost"         | "81.59"            |
+
 ```sql
 -- 5 rows returned
 ```
@@ -275,9 +288,11 @@ GROUP BY cus.CustomerId,
 ORDER BY TotalSpent DESC
 LIMIT 6;
 ```
+
 Result:
+
 | CustomerId | FirstName   | LastName      | TotalSpent |
-|------------|-------------|---------------|------------|
+| :---:      | :---        | :---          | :---       |
 | "55"       | "Mark"      | "Taylor"      | "17.82"    |
 | "35"       | "Madalena"  | "Sampaio"     | "15.84"    |
 | "16"       | "Frank"     | "Harris"      | "13.86"    |
@@ -328,8 +343,9 @@ ON genMax.BillingCountry = genData.BillingCountry AND genData.GenreCount = genMa
 ORDER BY 2
 ```
 Result:
+
 | GenreCount | Country          | GenreName            |
-|------------|------------------|----------------------|
+| :---:      | :---             | :---                 |
 | "9"        | "Argentina"      | "Alternative & Punk" |
 | "9"        | "Argentina"      | "Rock"               |
 | "22"       | "Australia"      | "Rock"               |
