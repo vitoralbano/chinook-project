@@ -10,11 +10,13 @@
     3.
         1. [Primeiro, descubra qual artista ganhou mais de acordo com InvoiceLines](##-2.3.1.-Primeiro,-descubra-qual-artista-ganhou-mais-de-acordo-com-InvoiceLines)
         2. [Agora encontre qual cliente gastou mais com o artista que você encontrou acima](##-2.3.2.-Agora-encontre-qual-cliente-gastou-mais-com-o-artista-que-você-encontrou-acima)
+3. Conjunto de perguntas 03
+    1. [Queremos descobrir o gênero musical mais popular em cada país](##-3.1.-Queremos-descobrir-o-gênero-musical-mais-popular-em-cada-país)
 
 # Diagrama de Entidade e Relacionamento (ERD)
 ![Chinook ERD](db/chinook-erd.png)
 
-# Answers
+# Respostas
 ## 1.1. Quais países possuem mais faturas?
 
 Query:
@@ -259,17 +261,17 @@ Result:
 Query:
 ```sql
 SELECT cus.CustomerId,
-	cus.FirstName,
-	cus.LastName,
-	SUM(invLine.UnitPrice * invLine.Quantity) AS TotalSpent
+    cus.FirstName,
+    cus.LastName,
+    SUM(invLine.UnitPrice * invLine.Quantity) AS TotalSpent
 FROM InvoiceLine invLine
 JOIN Invoice inv ON inv.InvoiceId = invLine.InvoiceId
 JOIN Customer cus ON cus.CustomerId = inv.CustomerId
 JOIN Track tra ON tra.TrackId = invLine.TrackId
 JOIN Album alb ON alb.AlbumId = tra.AlbumId AND alb.ArtistId = 90
 GROUP BY cus.CustomerId,
-	cus.Email,
-	cus.FirstName
+    cus.Email,
+    cus.FirstName
 ORDER BY TotalSpent DESC
 LIMIT 6;
 ```
@@ -286,3 +288,75 @@ Result:
 ```sql
 -- 6 rows returned
 ```
+
+## 3.1. Queremos descobrir o gênero musical mais popular em cada país. 
+> Determinamos o gênero mais popular como o gênero com o maior número de compras. Escreva uma consulta que retorna cada país juntamente a seu gênero mais vendido. Para países onde o número máximo de compras é compartilhado retorne todos os gêneros.
+
+Query: 
+ ```sql
+SELECT 
+    genData.GenreCount,
+    genData.BillingCountry Country,
+    genData.GenreName 
+FROM
+    (SELECT inv.BillingCountry,
+        gen.Name GenreName,
+        COUNT(*) AS GenreCount
+    FROM Invoice inv
+    JOIN InvoiceLine invLine ON invLine.InvoiceId = inv.InvoiceId
+    JOIN Track tra ON tra.TrackId = invLine.TrackId
+    JOIN Genre gen ON gen.GenreId = tra.GenreId
+    GROUP BY inv.BillingCountry, GenreName
+    ORDER BY 1, 3 DESC) AS genData
+	
+JOIN 
+    (SELECT DISTINCT genCount.BillingCountry,
+        MAX(genCount.GenreCount) GenreMax
+    FROM 
+        (SELECT inv.BillingCountry,
+            gen.Name GenreName,
+            COUNT(*) AS GenreCount
+        FROM Invoice inv
+        JOIN InvoiceLine invLine ON invLine.InvoiceId = inv.InvoiceId
+        JOIN Track tra ON tra.TrackId = invLine.TrackId
+        JOIN Genre gen ON gen.GenreId = tra.GenreId
+        GROUP BY inv.BillingCountry, GenreName
+        ORDER BY 1, 3 DESC) genCount
+        GROUP BY 1) genMax
+        
+ON genMax.BillingCountry = genData.BillingCountry AND genData.GenreCount = genMax.GenreMax
+ORDER BY 2
+```
+Result:
+| GenreCount | Country          | GenreName            |
+|------------|------------------|----------------------|
+| "9"        | "Argentina"      | "Alternative & Punk" |
+| "9"        | "Argentina"      | "Rock"               |
+| "22"       | "Australia"      | "Rock"               |
+| "15"       | "Austria"        | "Rock"               |
+| "21"       | "Belgium"        | "Rock"               |
+| "81"       | "Brazil"         | "Rock"               |
+| "107"      | "Canada"         | "Rock"               |
+| "9"        | "Chile"          | "Rock"               |
+| "25"       | "Czech Republic" | "Rock"               |
+| "21"       | "Denmark"        | "Rock"               |
+| "18"       | "Finland"        | "Rock"               |
+| "65"       | "France"         | "Rock"               |
+| "62"       | "Germany"        | "Rock"               |
+| "11"       | "Hungary"        | "Rock"               |
+| "25"       | "India"          | "Rock"               |
+| "12"       | "Ireland"        | "Rock"               |
+| "18"       | "Italy"          | "Rock"               |
+| "18"       | "Netherlands"    | "Rock"               |
+| "17"       | "Norway"         | "Rock"               |
+| "22"       | "Poland"         | "Rock"               |
+| "31"       | "Portugal"       | "Rock"               |
+| "22"       | "Spain"          | "Rock"               |
+| "12"       | "Sweden"         | "Latin"              |
+| "157"      | "USA"            | "Rock"               |
+| "37"       | "United Kingdom" | "Rock"               |
+
+```sql
+-- 25 rows returned
+```
+![Chinook ERD](db/chinook-erd.png)
