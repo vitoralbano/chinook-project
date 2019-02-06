@@ -1,17 +1,17 @@
 # Projeto Chinook
 # Perguntas:
 1. Conjunto de perguntas 01
-    1. [Quais países possuem mais faturas?](##-1.1.-Quais-países-possuem-mais-faturas)
-    2. [Qual cidade tem os melhores clientes?](##-1.2.-Qual-cidade-tem-os-melhores-clientes)
-    3. [Quem é o melhor cliente?](##-1.3.-Quem-é-o-melhor-cliente?)
+    1. [Quais países possuem mais faturas?](#-1.1.-Quais-países-possuem-mais-faturas)
+    2. [Qual cidade tem os melhores clientes?](#-1.2.-Qual-cidade-tem-os-melhores-clientes)
+    3. [Quem é o melhor cliente?](#-1.3.-Quem-é-o-melhor-cliente?)
 2. Conjunto de perguntas 02
-    1. [Use sua consulta para retornar o e-mail, nome, sobrenome e gênero de todos os ouvintes de Rock. Retorne sua lista ordenada alfabeticamente por endereço de e-mail, começando por A.](##-2.1.-Use-sua-consulta-para-retornar-o-e-mail,-nome,-sobrenome-e-gênero-de-todos-os-ouvintes-de-Rock.-Retorne-sua-lista-ordenada-alfabeticamente-por-endereço-de-e-mail,-começando-por-A)
-    2. [Agora que sabemos que nossos clientes amam rock, podemos decidir quais músicos convidar para tocar no show](##-2.2.-Agora-que-sabemos-que-nossos-clientes-amam-rock,-podemos-decidir-quais-músicos-convidar-para-tocar-no-show)
+    1. [Use sua consulta para retornar o e-mail, nome, sobrenome e gênero de todos os ouvintes de Rock. Retorne sua lista ordenada alfabeticamente por endereço de e-mail, começando por A.](#-2.1.-Use-sua-consulta-para-retornar-o-e-mail,-nome,-sobrenome-e-gênero-de-todos-os-ouvintes-de-Rock.-Retorne-sua-lista-ordenada-alfabeticamente-por-endereço-de-e-mail,-começando-por-A)
+    2. [Agora que sabemos que nossos clientes amam rock, podemos decidir quais músicos convidar para tocar no show](#-2.2.-Agora-que-sabemos-que-nossos-clientes-amam-rock,-podemos-decidir-quais-músicos-convidar-para-tocar-no-show)
     3.
-        1. [Primeiro, descubra qual artista ganhou mais de acordo com InvoiceLines](##-2.3.1.-Primeiro,-descubra-qual-artista-ganhou-mais-de-acordo-com-InvoiceLines)
-        2. [Agora encontre qual cliente gastou mais com o artista que você encontrou acima](##-2.3.2.-Agora-encontre-qual-cliente-gastou-mais-com-o-artista-que-você-encontrou-acima)
+        1. [Primeiro, descubra qual artista ganhou mais de acordo com InvoiceLines](#-2.3.1.-Primeiro,-descubra-qual-artista-ganhou-mais-de-acordo-com-InvoiceLines)
+        2. [Agora encontre qual cliente gastou mais com o artista que você encontrou acima](#-2.3.2.-Agora-encontre-qual-cliente-gastou-mais-com-o-artista-que-você-encontrou-acima)
 3. Conjunto de perguntas 03
-    1. [Queremos descobrir o gênero musical mais popular em cada país](##-3.1.-Queremos-descobrir-o-gênero-musical-mais-popular-em-cada-país)
+    1. [Queremos descobrir o gênero musical mais popular em cada país](#-3.1.-Queremos-descobrir-o-gênero-musical-mais-popular-em-cada-país)
 
 # Diagrama de Entidade e Relacionamento (ERD)
 ![Chinook ERD](db/chinook-erd.png)
