@@ -30,7 +30,7 @@ ORDER BY Invoices DESC;
 ```
 Result:
 | BillingCountry   | Invoices |
-|------------------|----------|
+| :---             | :---:    |
 | "USA"            | "91"     |
 | "Canada"         | "56"     |
 | "Brazil"         | "35"     |
