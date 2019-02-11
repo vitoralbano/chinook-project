@@ -1,0 +1,64 @@
+/* Query 1 - Gêneros musicais mais vendidos */
+SELECT
+    gen.Name GenreName,
+    COUNT(gen.Name) Quantity
+FROM Genre gen
+JOIN Track tra ON tra.GenreId = gen.GenreId
+JOIN InvoiceLine invLine ON invLine.TrackId = tra.TrackId
+GROUP BY GenreName
+ORDER BY Quantity DESC
+LIMIT 10;
+
+
+/* Query 2 - Vendas do gênero Rock por país */
+SELECT 
+    inv.BillingCountry Country,
+    SUM(invLine.Quantity) Quantity
+FROM Invoice inv
+JOIN InvoiceLine invLine ON invLine.InvoiceId = inv.InvoiceId
+JOIN Track tra ON tra.TrackId = invLine.TrackId
+JOIN Genre gen ON gen.GenreId = tra.GenreId AND gen.Name = 'Rock'
+GROUP BY Country
+ORDER BY Quantity DESC;
+
+
+/* Query 3 - Artista mais populares do Rock */
+SELECT art.Name ArtistName,
+    COUNT(*) TrackCount
+FROM Track tra
+JOIN Album alb ON alb.AlbumId = tra.AlbumId
+JOIN Artist art ON art.ArtistId = alb.ArtistId
+JOIN Genre gen ON gen.GenreId = tra.GenreId AND gen.Name = 'Rock'
+GROUP BY 1
+ORDER BY TrackCount DESC
+LIMIT 10;
+
+
+/* Query 4 - Média de vendas do gênero Rock, por trimestre */
+SELECT 
+	invQuarter.Quarter,
+    AVG(invQuarter.Quantity) avgQuantity
+FROM 
+
+    (SELECT
+        inv.InvoiceId,
+        inv.BillingCountry Country,
+        inv.Total,
+        SUM(invLine.Quantity) Quantity,
+        strftime('%Y', inv.InvoiceDate) Year,
+        CASE 
+            WHEN strftime('%m', inv.InvoiceDate) IN ('01', '02', '03') THEN '1st Quarter'
+            WHEN strftime('%m', inv.InvoiceDate) IN ('04', '05', '06') THEN '2nd Quarter'
+            WHEN strftime('%m', inv.InvoiceDate) IN ('07', '08', '09') THEN '3rd Quarter'
+            ELSE '4th Quarter'
+        END AS Quarter
+
+    FROM Invoice inv
+    JOIN InvoiceLine invLine ON invLine.InvoiceId = inv.InvoiceId
+	JOIN Track tra ON tra.TrackId = invLine.TrackId
+	JOIN Genre gen ON gen.GenreId = tra.GenreId AND gen.Name = 'Rock'
+
+    GROUP BY inv.InvoiceId, Country
+    ORDER BY Country, Quarter) invQuarter
+
+GROUP BY Quarter
