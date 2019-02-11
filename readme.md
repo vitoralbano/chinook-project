@@ -1,7 +1,7 @@
 # Projeto Chinook
 # Perguntas:
 1. Conjunto de perguntas 01
-    1. [Quais países possuem mais faturas?](#11-Quais-países-possuem-mais-faturas)
+    1. [Quais países possuem mais faturas?](#11)
     2. [Qual cidade tem os melhores clientes?](#12-Qual-cidade-tem-os-melhores-clientes)
     3. [Quem é o melhor cliente?](#13-Quem-é-o-melhor-cliente?)
 2. Conjunto de perguntas 02
@@ -12,6 +12,11 @@
         2. [Agora encontre qual cliente gastou mais com o artista que você encontrou acima](#232-Agora-encontre-qual-cliente-gastou-mais-com-o-artista-que-você-encontrou-acima)
 3. Conjunto de perguntas 03
     1. [Queremos descobrir o gênero musical mais popular em cada país](#31-Queremos-descobrir-o-gênero-musical-mais-popular-em-cada-país)
+    2. [Retorne todos os nomes de músicas que possuem um comprimento de canção maior que o comprimento médio de canção.](#32-Retorne-todos-os-nomes-de-músicas-que-possuem-um-comprimento-de-canção-maior-que-o-comprimento-médio-de-canção)
+    3. [Qual cliente gastou mais em músicas por país.](#33-Qual-cliente-gastou-mais-em-músicas-por-país)
+4. Extra questions
+    1. [Quais são os gêneros musicais mais vendidos?](#41-Quais-são-os-gêneros-musicais-mais-vendidos?)
+    2. [Qual é o volume de vendas por trimestre por ano?](#42-Qual-é-o-volume-de-vendas-por-trimestre-por-ano?)
 
 # Diagrama de Entidade e Relacionamento (ERD)
 ![Chinook ERD](db/chinook-erd.png)
@@ -20,6 +25,7 @@
 ## 1.1. Quais países possuem mais faturas?
 
 Query:
+
 ```sql
 SELECT 
     BillingCountry,
@@ -31,7 +37,7 @@ ORDER BY Invoices DESC;
 Result:
 
 | BillingCountry   | Invoices |
-| :---             | :---:    |
+| :---             | ---:    |
 | "USA"            | "91"     |
 | "Canada"         | "56"     |
 | "Brazil"         | "35"     |
@@ -107,7 +113,7 @@ JOIN Customer Cus ON Cus.CustomerId = Cus_Profit.CustomerId;
 Result:
 
 | CustomerId | FirstName | Country          | TotalProfit |
-| :---:      | :---      | :---             | :---:       |
+| :---:      | :---      | :---             | ---:       |
 | "6"        | "Helena"  | "Czech Republic" | "49.62"     |
 
 ```sql
@@ -141,7 +147,7 @@ ORDER BY cus.Email;
 Result: 
 
 | Email                           | FirstName   | LastName       | Genre  |
-| :---                            | :---        | :---           | :---   |
+| :---                            | :---        | :---           | :---:   |
 | "aaronmitchell@yahoo.ca"        | "Aaron"     | "Mitchell"     | "Rock" |
 | "alero@uol.com.br"              | "Alexandre" | "Rocha"        | "Rock" |
 | "astrid.gruber@apple.at"        | "Astrid"    | "Gruber"       | "Rock" |
@@ -225,7 +231,7 @@ LIMIT 10;
 Result:
 
 | ArtistName                     | TrackCount |
-| :---                           | :---:      |
+| :---                           | ---:      |
 | "Led Zeppelin"                 | "114"      |
 | "U2"                           | "112"      |
 | "Deep Purple"                  | "92"       |
@@ -259,7 +265,7 @@ LIMIT 5;
 Result: 
 
 | ArtistId | ArtistName     | Total              |
-| :---:    | :---           | :---:              |
+| :---:    | :---           | ---:              |
 | "90"     | "Iron Maiden"  | "138.6"            |
 | "150"    | "U2"           | "105.93"           |
 | "50"     | "Metallica"    | "90.0899999999999" |
@@ -292,7 +298,7 @@ LIMIT 6;
 Result:
 
 | CustomerId | FirstName   | LastName      | TotalSpent |
-| :---:      | :---        | :---          | :---       |
+| :---:      | :---        | :---          | ---:       |
 | "55"       | "Mark"      | "Taylor"      | "17.82"    |
 | "35"       | "Madalena"  | "Sampaio"     | "15.84"    |
 | "16"       | "Frank"     | "Harris"      | "13.86"    |
@@ -310,13 +316,13 @@ Result:
 Query: 
  ```sql
 SELECT 
-    genData.GenreCount,
+    genData.Purchases,
     genData.BillingCountry Country,
     genData.GenreName 
 FROM
     (SELECT inv.BillingCountry,
         gen.Name GenreName,
-        COUNT(*) AS GenreCount
+        COUNT(*) AS Purchases
     FROM Invoice inv
     JOIN InvoiceLine invLine ON invLine.InvoiceId = inv.InvoiceId
     JOIN Track tra ON tra.TrackId = invLine.TrackId
@@ -325,12 +331,12 @@ FROM
     ORDER BY 1, 3 DESC) AS genData
 	
 JOIN 
-    (SELECT DISTINCT genCount.BillingCountry,
-        MAX(genCount.GenreCount) GenreMax
+    (SELECT genCount.BillingCountry,
+        MAX(genCount.Purchases) GenreMax
     FROM 
         (SELECT inv.BillingCountry,
             gen.Name GenreName,
-            COUNT(*) AS GenreCount
+            COUNT(*) AS Purchases
         FROM Invoice inv
         JOIN InvoiceLine invLine ON invLine.InvoiceId = inv.InvoiceId
         JOIN Track tra ON tra.TrackId = invLine.TrackId
@@ -339,13 +345,13 @@ JOIN
         ORDER BY 1, 3 DESC) genCount
         GROUP BY 1) genMax
         
-ON genMax.BillingCountry = genData.BillingCountry AND genData.GenreCount = genMax.GenreMax
-ORDER BY 2
+ON genMax.BillingCountry = genData.BillingCountry AND genData.Purchases = genMax.GenreMax
+ORDER BY Country;
 ```
 Result:
 
-| GenreCount | Country          | GenreName            |
-| :---:      | :---             | :---                 |
+| Purchases  | Country          | GenreName            |
+| :---:      | :---             | ---:                 |
 | "9"        | "Argentina"      | "Alternative & Punk" |
 | "9"        | "Argentina"      | "Rock"               |
 | "22"       | "Australia"      | "Rock"               |
@@ -376,3 +382,389 @@ Result:
 -- 25 rows returned
 ```
 ![Chinook ERD](db/chinook-erd.png)
+
+## 3.2. Retorne todos os nomes de músicas que possuem um comprimento de canção maior que o comprimento médio de canção.
+```sql
+SELECT tra.Name,
+    tra.Milliseconds
+FROM Track tra
+GROUP BY tra.Name
+HAVING tra.Milliseconds > (SELECT AVG(Milliseconds) FROM Track)
+ORDER BY tra.Milliseconds DESC
+LIMIT 10;
+```
+
+Result:
+
+| Name                          | Milliseconds |
+| :---                          | ---:        |
+| "Occupation / Precipice"      | "5286953"    |
+| "Through a Looking Glass"     | "5088838"    |
+| "Greetings from Earth, Pt. 1" | "2960293"    |
+| "The Man With Nine Lives"     | "2956998"    |
+| "Battlestar Galactica, Pt. 2" | "2956081"    |
+| "Battlestar Galactica, Pt. 1" | "2952702"    |
+| "Murder On the Rising Star"   | "2935894"    |
+| "Battlestar Galactica, Pt. 3" | "2927802"    |
+| "Take the Celestra"           | "2927677"    |
+| "Fire In Space"               | "2926593"    |
+
+```sql
+-- 10 rows returned
+```
+
+## 3.3 Qual cliente gastou mais em músicas por país.
+
+Query:
+
+```sql
+SELECT 
+    cus_total.CustomerId,
+    cus_total.Country,
+    cus_total.FirstName,
+    cus_total.LastName,
+    MAX(cus_total.Total) TotalSpent
+FROM 
+	
+    (SELECT 
+        cus.CustomerId,
+        cus.Country,
+        cus.FirstName,
+        cus.LastName,
+        SUM(inv.Total) Total
+    FROM Customer cus
+    JOIN Invoice inv ON inv.CustomerId = cus.CustomerId
+    GROUP BY 1, 2, 3, 4) cus_total
+
+GROUP BY cus_total.Country, cus_total.FirstName
+ORDER BY cus_total.Total DESC
+LIMIT 10;
+```
+
+Result: 
+
+| CustomerId | Contry           | FirstName  | LastName     | TotatSpent |
+| :---       | :---             | :---       | :---         | ---:       |
+| "6"        | "Czech Republic" | "Helena"   | "Holý"       | "49.62"    |
+| "26"       | "USA"            | "Richard"  | "Cunningham" | "47.62"    |
+| "57"       | "Chile"          | "Luis"     | "Rojas"      | "46.62"    |
+| "45"       | "Hungary"        | "Ladislav" | "Kovács"     | "45.62"    |
+| "46"       | "Ireland"        | "Hugh"     | "O'Reilly"   | "45.62"    |
+| "28"       | "USA"            | "Julia"    | "Barnett"    | "43.62"    |
+| "37"       | "Germany"        | "Fynn"     | "Zimmermann" | "43.62"    |
+| "24"       | "USA"            | "Frank"    | "Ralston"    | "43.62"    |
+| "7"        | "Austria"        | "Astrid"   | "Gruber"     | "42.62"    |
+| "25"       | "USA"            | "Victor"   | "Stevens"    | "42.62"    |
+
+```sql
+-- 10 rows returned
+```
+
+## 4.1. Quais são os gêneros musicais mais vendidos?
+
+Query:
+
+```sql
+SELECT
+    gen.Name GenreName,
+    COUNT(gen.Name) Quantity
+FROM Genre gen
+JOIN Track tra ON tra.GenreId = gen.GenreId
+JOIN InvoiceLine invLine ON invLine.TrackId = tra.TrackId
+GROUP BY GenreName
+ORDER BY Quantity DESC
+LIMIT 10;
+```
+Result: 
+
+| GenreName            | Quantity |
+| :---                 | ---:     |
+| "Rock"               | "835"    |
+| "Latin"              | "386"    |
+| "Metal"              | "264"    |
+| "Alternative & Punk" | "244"    |
+| "Jazz"               | "80"     |
+| "Blues"              | "61"     |
+| "TV Shows"           | "47"     |
+| "Classical"          | "41"     |
+| "R&B/Soul"           | "41"     |
+| "Reggae"             | "30"     |
+
+## 4.2. Qual é o volume de vendas por trimestre por ano?
+
+Query:
+
+```sql
+SELECT 
+    invQuarter.Country,
+    SUM(invQuarter.Quantity) Quantity,
+    SUM(invQuarter.Total) Total,
+    printf('%s %s', invQuarter.Year, invQuarter.Quarter) Period
+FROM 
+
+    (SELECT
+        inv.InvoiceId,
+        inv.BillingCountry Country,
+        inv.Total,
+        SUM(invLine.Quantity) Quantity,
+        strftime('%Y', inv.InvoiceDate) Year,
+        CASE 
+            WHEN strftime('%m', inv.InvoiceDate) IN ('01', '02', '03') THEN '1st Quarter'
+            WHEN strftime('%m', inv.InvoiceDate) IN ('04', '05', '06') THEN '2nd Quarter'
+            WHEN strftime('%m', inv.InvoiceDate) IN ('07', '08', '09') THEN '3rd Quarter'
+            ELSE '4th Quarter'
+        END AS Quarter
+
+    FROM Invoice inv
+    JOIN InvoiceLine invLine ON invLine.InvoiceId = inv.InvoiceId
+
+    GROUP BY inv.InvoiceId, Country
+    ORDER BY Country, Quarter) invQuarter
+
+GROUP BY Country, Year, Quarter
+```
+
+Result:
+
+| Country          | Quantity | Total   | Period             |
+| :---             | ---:     | ---:    | :---               |
+| "Argentina"      | "2"      | "1.98"  | "2010 2nd Quarter" |
+| "Argentina"      | "4"      | "3.96"  | "2010 3rd Quarter" |
+| "Argentina"      | "6"      | "5.94"  | "2010 4th Quarter" |
+| "Argentina"      | "1"      | "0.99"  | "2011 3rd Quarter" |
+| "Argentina"      | "16"     | "15.84" | "2013 1st Quarter" |
+| "Argentina"      | "9"      | "8.91"  | "2013 4th Quarter" |
+| "Australia"      | "2"      | "1.98"  | "2009 2nd Quarter" |
+| "Australia"      | "4"      | "3.96"  | "2009 3rd Quarter" |
+| "Australia"      | "6"      | "5.94"  | "2009 4th Quarter" |
+| "Australia"      | "1"      | "0.99"  | "2010 2nd Quarter" |
+| "Australia"      | "2"      | "1.98"  | "2011 4th Quarter" |
+| "Australia"      | "14"     | "13.86" | "2012 1st Quarter" |
+| "Australia"      | "9"      | "8.91"  | "2012 3rd Quarter" |
+| "Austria"        | "2"      | "1.98"  | "2009 4th Quarter" |
+| "Austria"        | "14"     | "18.86" | "2010 1st Quarter" |
+| "Austria"        | "9"      | "8.91"  | "2010 3rd Quarter" |
+| "Austria"        | "2"      | "1.98"  | "2012 2nd Quarter" |
+| "Austria"        | "4"      | "3.96"  | "2012 3rd Quarter" |
+| "Austria"        | "6"      | "5.94"  | "2012 4th Quarter" |
+| "Austria"        | "1"      | "0.99"  | "2013 2nd Quarter" |
+| "Belgium"        | "6"      | "5.94"  | "2009 1st Quarter" |
+| "Belgium"        | "1"      | "0.99"  | "2009 3rd Quarter" |
+| "Belgium"        | "16"     | "15.84" | "2011 1st Quarter" |
+| "Belgium"        | "9"      | "8.91"  | "2011 4th Quarter" |
+| "Belgium"        | "2"      | "1.98"  | "2013 3rd Quarter" |
+| "Belgium"        | "4"      | "3.96"  | "2013 4th Quarter" |
+| "Brazil"         | "12"     | "11.88" | "2009 2nd Quarter" |
+| "Brazil"         | "6"      | "5.94"  | "2009 3rd Quarter" |
+| "Brazil"         | "20"     | "19.8"  | "2009 4th Quarter" |
+| "Brazil"         | "2"      | "3.98"  | "2010 1st Quarter" |
+| "Brazil"         | "13"     | "12.87" | "2010 2nd Quarter" |
+| "Brazil"         | "7"      | "6.93"  | "2010 3rd Quarter" |
+| "Brazil"         | "18"     | "17.82" | "2010 4th Quarter" |
+| "Brazil"         | "4"      | "3.96"  | "2011 1st Quarter" |
+| "Brazil"         | "7"      | "6.93"  | "2011 2nd Quarter" |
+| "Brazil"         | "9"      | "8.91"  | "2011 3rd Quarter" |
+| "Brazil"         | "19"     | "18.81" | "2012 1st Quarter" |
+| "Brazil"         | "4"      | "3.96"  | "2012 2nd Quarter" |
+| "Brazil"         | "6"      | "5.94"  | "2012 3rd Quarter" |
+| "Brazil"         | "25"     | "24.75" | "2012 4th Quarter" |
+| "Brazil"         | "3"      | "2.97"  | "2013 1st Quarter" |
+| "Brazil"         | "29"     | "28.71" | "2013 3rd Quarter" |
+| "Brazil"         | "6"      | "5.94"  | "2013 4th Quarter" |
+| "Canada"         | "18"     | "17.82" | "2009 1st Quarter" |
+| "Canada"         | "3"      | "2.97"  | "2009 2nd Quarter" |
+| "Canada"         | "33"     | "32.67" | "2009 3rd Quarter" |
+| "Canada"         | "4"      | "3.96"  | "2009 4th Quarter" |
+| "Canada"         | "17"     | "19.83" | "2010 1st Quarter" |
+| "Canada"         | "23"     | "22.77" | "2010 2nd Quarter" |
+| "Canada"         | "2"      | "1.98"  | "2010 3rd Quarter" |
+| "Canada"         | "32"     | "31.68" | "2010 4th Quarter" |
+| "Canada"         | "26"     | "25.74" | "2011 1st Quarter" |
+| "Canada"         | "6"      | "5.94"  | "2011 2nd Quarter" |
+| "Canada"         | "9"      | "8.91"  | "2011 3rd Quarter" |
+| "Canada"         | "15"     | "14.85" | "2011 4th Quarter" |
+| "Canada"         | "10"     | "9.9"   | "2012 1st Quarter" |
+| "Canada"         | "26"     | "25.74" | "2012 2nd Quarter" |
+| "Canada"         | "2"      | "1.98"  | "2012 3rd Quarter" |
+| "Canada"         | "5"      | "4.95"  | "2012 4th Quarter" |
+| "Canada"         | "20"     | "19.8"  | "2013 1st Quarter" |
+| "Canada"         | "22"     | "21.78" | "2013 2nd Quarter" |
+| "Canada"         | "25"     | "24.75" | "2013 3rd Quarter" |
+| "Canada"         | "6"      | "5.94"  | "2013 4th Quarter" |
+| "Chile"          | "16"     | "15.84" | "2009 2nd Quarter" |
+| "Chile"          | "9"      | "17.91" | "2010 1st Quarter" |
+| "Chile"          | "2"      | "1.98"  | "2011 3rd Quarter" |
+| "Chile"          | "4"      | "3.96"  | "2011 4th Quarter" |
+| "Chile"          | "6"      | "5.94"  | "2012 1st Quarter" |
+| "Chile"          | "1"      | "0.99"  | "2012 4th Quarter" |
+| "Czech Republic" | "9"      | "8.91"  | "2009 3rd Quarter" |
+| "Czech Republic" | "2"      | "1.98"  | "2009 4th Quarter" |
+| "Czech Republic" | "4"      | "3.96"  | "2010 1st Quarter" |
+| "Czech Republic" | "6"      | "5.94"  | "2010 2nd Quarter" |
+| "Czech Republic" | "3"      | "2.97"  | "2011 1st Quarter" |
+| "Czech Republic" | "4"      | "3.96"  | "2011 2nd Quarter" |
+| "Czech Republic" | "6"      | "5.94"  | "2011 3rd Quarter" |
+| "Czech Republic" | "1"      | "0.99"  | "2012 2nd Quarter" |
+| "Czech Republic" | "16"     | "18.84" | "2012 3rd Quarter" |
+| "Czech Republic" | "9"      | "8.91"  | "2013 2nd Quarter" |
+| "Czech Republic" | "16"     | "27.84" | "2013 4th Quarter" |
+| "Denmark"        | "2"      | "1.98"  | "2009 3rd Quarter" |
+| "Denmark"        | "4"      | "3.96"  | "2009 4th Quarter" |
+| "Denmark"        | "6"      | "5.94"  | "2010 1st Quarter" |
+| "Denmark"        | "1"      | "0.99"  | "2010 4th Quarter" |
+| "Denmark"        | "16"     | "15.84" | "2012 2nd Quarter" |
+| "Denmark"        | "9"      | "8.91"  | "2013 1st Quarter" |
+| "Finland"        | "9"      | "8.91"  | "2009 3rd Quarter" |
+| "Finland"        | "2"      | "1.98"  | "2011 1st Quarter" |
+| "Finland"        | "4"      | "7.96"  | "2011 2nd Quarter" |
+| "Finland"        | "6"      | "5.94"  | "2011 3rd Quarter" |
+| "Finland"        | "1"      | "0.99"  | "2012 2nd Quarter" |
+| "Finland"        | "16"     | "15.84" | "2013 4th Quarter" |
+| "France"         | "20"     | "19.8"  | "2009 1st Quarter" |
+| "France"         | "6"      | "5.94"  | "2009 2nd Quarter" |
+| "France"         | "10"     | "9.9"   | "2009 4th Quarter" |
+| "France"         | "2"      | "1.98"  | "2010 1st Quarter" |
+| "France"         | "22"     | "21.78" | "2010 2nd Quarter" |
+| "France"         | "10"     | "9.9"   | "2010 3rd Quarter" |
+| "France"         | "6"      | "5.94"  | "2010 4th Quarter" |
+| "France"         | "10"     | "9.9"   | "2011 1st Quarter" |
+| "France"         | "5"      | "8.95"  | "2011 2nd Quarter" |
+| "France"         | "18"     | "17.82" | "2011 3rd Quarter" |
+| "France"         | "6"      | "5.94"  | "2011 4th Quarter" |
+| "France"         | "9"      | "8.91"  | "2012 1st Quarter" |
+| "France"         | "5"      | "4.95"  | "2012 3rd Quarter" |
+| "France"         | "20"     | "22.8"  | "2012 4th Quarter" |
+| "France"         | "20"     | "19.8"  | "2013 1st Quarter" |
+| "France"         | "9"      | "8.91"  | "2013 2nd Quarter" |
+| "France"         | "9"      | "8.91"  | "2013 3rd Quarter" |
+| "France"         | "3"      | "2.97"  | "2013 4th Quarter" |
+| "Germany"        | "19"     | "18.81" | "2009 1st Quarter" |
+| "Germany"        | "20"     | "19.8"  | "2009 2nd Quarter" |
+| "Germany"        | "6"      | "5.94"  | "2009 3rd Quarter" |
+| "Germany"        | "9"      | "8.91"  | "2009 4th Quarter" |
+| "Germany"        | "10"     | "9.9"   | "2010 1st Quarter" |
+| "Germany"        | "16"     | "15.84" | "2010 3rd Quarter" |
+| "Germany"        | "11"     | "16.89" | "2011 2nd Quarter" |
+| "Germany"        | "8"      | "7.92"  | "2011 3rd Quarter" |
+| "Germany"        | "24"     | "23.76" | "2011 4th Quarter" |
+| "Germany"        | "6"      | "5.94"  | "2012 1st Quarter" |
+| "Germany"        | "9"      | "8.91"  | "2012 2nd Quarter" |
+| "Germany"        | "1"      | "0.99"  | "2012 3rd Quarter" |
+| "Germany"        | "3"      | "2.97"  | "2012 4th Quarter" |
+| "Germany"        | "4"      | "3.96"  | "2013 1st Quarter" |
+| "Germany"        | "6"      | "5.94"  | "2013 2nd Quarter" |
+| "Hungary"        | "16"     | "23.84" | "2010 1st Quarter" |
+| "Hungary"        | "9"      | "8.91"  | "2010 4th Quarter" |
+| "Hungary"        | "2"      | "1.98"  | "2012 2nd Quarter" |
+| "Hungary"        | "4"      | "3.96"  | "2012 3rd Quarter" |
+| "Hungary"        | "6"      | "5.94"  | "2012 4th Quarter" |
+| "Hungary"        | "1"      | "0.99"  | "2013 3rd Quarter" |
+| "India"          | "4"      | "3.96"  | "2009 2nd Quarter" |
+| "India"          | "6"      | "5.94"  | "2009 3rd Quarter" |
+| "India"          | "1"      | "1.99"  | "2010 1st Quarter" |
+| "India"          | "2"      | "1.98"  | "2010 2nd Quarter" |
+| "India"          | "14"     | "13.86" | "2010 3rd Quarter" |
+| "India"          | "9"      | "8.91"  | "2011 1st Quarter" |
+| "India"          | "16"     | "15.84" | "2011 3rd Quarter" |
+| "India"          | "9"      | "8.91"  | "2012 2nd Quarter" |
+| "India"          | "2"      | "1.98"  | "2012 4th Quarter" |
+| "India"          | "4"      | "3.96"  | "2013 1st Quarter" |
+| "India"          | "6"      | "5.94"  | "2013 2nd Quarter" |
+| "India"          | "1"      | "1.99"  | "2013 4th Quarter" |
+| "Ireland"        | "6"      | "5.94"  | "2009 1st Quarter" |
+| "Ireland"        | "1"      | "0.99"  | "2009 3rd Quarter" |
+| "Ireland"        | "2"      | "1.98"  | "2011 1st Quarter" |
+| "Ireland"        | "14"     | "21.86" | "2011 2nd Quarter" |
+| "Ireland"        | "9"      | "8.91"  | "2011 4th Quarter" |
+| "Ireland"        | "2"      | "1.98"  | "2013 3rd Quarter" |
+| "Ireland"        | "4"      | "3.96"  | "2013 4th Quarter" |
+| "Italy"          | "2"      | "1.98"  | "2009 4th Quarter" |
+| "Italy"          | "4"      | "3.96"  | "2010 1st Quarter" |
+| "Italy"          | "6"      | "5.94"  | "2010 2nd Quarter" |
+| "Italy"          | "1"      | "0.99"  | "2010 4th Quarter" |
+| "Italy"          | "2"      | "1.98"  | "2012 2nd Quarter" |
+| "Italy"          | "14"     | "13.86" | "2012 3rd Quarter" |
+| "Italy"          | "9"      | "8.91"  | "2013 1st Quarter" |
+| "Netherlands"    | "9"      | "8.91"  | "2009 2nd Quarter" |
+| "Netherlands"    | "2"      | "1.98"  | "2010 4th Quarter" |
+| "Netherlands"    | "4"      | "3.96"  | "2011 1st Quarter" |
+| "Netherlands"    | "6"      | "8.94"  | "2011 2nd Quarter" |
+| "Netherlands"    | "1"      | "0.99"  | "2012 1st Quarter" |
+| "Netherlands"    | "16"     | "15.84" | "2013 3rd Quarter" |
+| "Norway"         | "4"      | "3.96"  | "2009 1st Quarter" |
+| "Norway"         | "6"      | "5.94"  | "2009 2nd Quarter" |
+| "Norway"         | "1"      | "0.99"  | "2009 4th Quarter" |
+| "Norway"         | "16"     | "17.84" | "2011 2nd Quarter" |
+| "Norway"         | "9"      | "8.91"  | "2012 1st Quarter" |
+| "Norway"         | "2"      | "1.98"  | "2013 4th Quarter" |
+| "Poland"         | "16"     | "15.84" | "2009 4th Quarter" |
+| "Poland"         | "9"      | "8.91"  | "2010 3rd Quarter" |
+| "Poland"         | "2"      | "1.98"  | "2012 1st Quarter" |
+| "Poland"         | "4"      | "3.96"  | "2012 2nd Quarter" |
+| "Poland"         | "6"      | "5.94"  | "2012 3rd Quarter" |
+| "Poland"         | "1"      | "0.99"  | "2013 2nd Quarter" |
+| "Portugal"       | "2"      | "1.98"  | "2009 2nd Quarter" |
+| "Portugal"       | "4"      | "3.96"  | "2009 3rd Quarter" |
+| "Portugal"       | "6"      | "5.94"  | "2009 4th Quarter" |
+| "Portugal"       | "1"      | "0.99"  | "2010 2nd Quarter" |
+| "Portugal"       | "2"      | "1.98"  | "2010 3rd Quarter" |
+| "Portugal"       | "4"      | "3.96"  | "2010 4th Quarter" |
+| "Portugal"       | "6"      | "5.94"  | "2011 1st Quarter" |
+| "Portugal"       | "1"      | "0.99"  | "2011 3rd Quarter" |
+| "Portugal"       | "2"      | "1.98"  | "2011 4th Quarter" |
+| "Portugal"       | "14"     | "13.86" | "2012 1st Quarter" |
+| "Portugal"       | "9"      | "10.91" | "2012 4th Quarter" |
+| "Portugal"       | "2"      | "1.98"  | "2013 1st Quarter" |
+| "Portugal"       | "14"     | "13.86" | "2013 2nd Quarter" |
+| "Portugal"       | "9"      | "8.91"  | "2013 4th Quarter" |
+| "Spain"          | "1"      | "0.99"  | "2009 2nd Quarter" |
+| "Spain"          | "2"      | "1.98"  | "2010 4th Quarter" |
+| "Spain"          | "14"     | "13.86" | "2011 1st Quarter" |
+| "Spain"          | "9"      | "8.91"  | "2011 3rd Quarter" |
+| "Spain"          | "2"      | "1.98"  | "2013 2nd Quarter" |
+| "Spain"          | "4"      | "3.96"  | "2013 3rd Quarter" |
+| "Spain"          | "6"      | "5.94"  | "2013 4th Quarter" |
+| "Sweden"         | "2"      | "1.98"  | "2009 3rd Quarter" |
+| "Sweden"         | "4"      | "3.96"  | "2009 4th Quarter" |
+| "Sweden"         | "6"      | "6.94"  | "2010 1st Quarter" |
+| "Sweden"         | "1"      | "0.99"  | "2010 3rd Quarter" |
+| "Sweden"         | "2"      | "1.98"  | "2012 1st Quarter" |
+| "Sweden"         | "14"     | "13.86" | "2012 2nd Quarter" |
+| "Sweden"         | "9"      | "8.91"  | "2012 4th Quarter" |
+| "USA"            | "29"     | "28.71" | "2009 1st Quarter" |
+| "USA"            | "33"     | "32.67" | "2009 2nd Quarter" |
+| "USA"            | "15"     | "14.85" | "2009 3rd Quarter" |
+| "USA"            | "28"     | "27.72" | "2009 4th Quarter" |
+| "USA"            | "23"     | "24.77" | "2010 1st Quarter" |
+| "USA"            | "29"     | "28.71" | "2010 2nd Quarter" |
+| "USA"            | "35"     | "34.65" | "2010 3rd Quarter" |
+| "USA"            | "15"     | "14.85" | "2010 4th Quarter" |
+| "USA"            | "12"     | "11.88" | "2011 1st Quarter" |
+| "USA"            | "32"     | "36.68" | "2011 2nd Quarter" |
+| "USA"            | "29"     | "28.71" | "2011 3rd Quarter" |
+| "USA"            | "26"     | "25.74" | "2011 4th Quarter" |
+| "USA"            | "18"     | "17.82" | "2012 1st Quarter" |
+| "USA"            | "18"     | "17.82" | "2012 2nd Quarter" |
+| "USA"            | "38"     | "64.62" | "2012 3rd Quarter" |
+| "USA"            | "28"     | "27.72" | "2012 4th Quarter" |
+| "USA"            | "14"     | "13.86" | "2013 1st Quarter" |
+| "USA"            | "20"     | "19.8"  | "2013 2nd Quarter" |
+| "USA"            | "20"     | "19.8"  | "2013 3rd Quarter" |
+| "USA"            | "32"     | "31.68" | "2013 4th Quarter" |
+| "United Kingdom" | "10"     | "9.9"   | "2009 1st Quarter" |
+| "United Kingdom" | "16"     | "15.84" | "2009 3rd Quarter" |
+| "United Kingdom" | "9"      | "8.91"  | "2010 2nd Quarter" |
+| "United Kingdom" | "4"      | "3.96"  | "2010 3rd Quarter" |
+| "United Kingdom" | "18"     | "17.82" | "2010 4th Quarter" |
+| "United Kingdom" | "6"      | "5.94"  | "2011 1st Quarter" |
+| "United Kingdom" | "9"      | "8.91"  | "2011 2nd Quarter" |
+| "United Kingdom" | "3"      | "2.97"  | "2011 4th Quarter" |
+| "United Kingdom" | "4"      | "3.96"  | "2012 1st Quarter" |
+| "United Kingdom" | "6"      | "5.94"  | "2012 2nd Quarter" |
+| "United Kingdom" | "3"      | "2.97"  | "2013 1st Quarter" |
+| "United Kingdom" | "20"     | "19.8"  | "2013 2nd Quarter" |
+| "United Kingdom" | "6"      | "5.94"  | "2013 3rd Quarter" |
+
+```sql
+-- 236 rows returned
+```
