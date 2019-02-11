@@ -1,0 +1,44 @@
+/* Query 1 - Gêneros musicais mais vendidos */
+SELECT
+    gen.Name GenreName,
+    COUNT(gen.Name) Quantity
+FROM Genre gen
+JOIN Track tra ON tra.GenreId = gen.GenreId
+JOIN InvoiceLine invLine ON invLine.TrackId = tra.TrackId
+GROUP BY GenreName
+ORDER BY Quantity DESC
+LIMIT 10;
+
+/* Query 2 - Gênero mais popular por país */
+SELECT 
+    genData.Purchases,
+    genData.BillingCountry Country,
+    genData.GenreName 
+FROM
+    (SELECT inv.BillingCountry,
+        gen.Name GenreName,
+        COUNT(*) AS Purchases
+    FROM Invoice inv
+    JOIN InvoiceLine invLine ON invLine.InvoiceId = inv.InvoiceId
+    JOIN Track tra ON tra.TrackId = invLine.TrackId
+    JOIN Genre gen ON gen.GenreId = tra.GenreId
+    GROUP BY inv.BillingCountry, GenreName
+    ORDER BY 1, 3 DESC) AS genData
+	
+JOIN 
+    (SELECT genCount.BillingCountry,
+        MAX(genCount.Purchases) GenreMax
+    FROM 
+        (SELECT inv.BillingCountry,
+            gen.Name GenreName,
+            COUNT(*) AS Purchases
+        FROM Invoice inv
+        JOIN InvoiceLine invLine ON invLine.InvoiceId = inv.InvoiceId
+        JOIN Track tra ON tra.TrackId = invLine.TrackId
+        JOIN Genre gen ON gen.GenreId = tra.GenreId
+        GROUP BY inv.BillingCountry, GenreName
+        ORDER BY 1, 3 DESC) genCount
+        GROUP BY 1) genMax
+        
+ON genMax.BillingCountry = genData.BillingCountry AND genData.Purchases = genMax.GenreMax
+ORDER BY Purchases DESC;
