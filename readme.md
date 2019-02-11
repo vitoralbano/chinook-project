@@ -1,11 +1,11 @@
 # Projeto Chinook
 # Perguntas:
 1. Conjunto de perguntas 01
-    1. [Quais países possuem mais faturas?](#11)
+    1. [Quais países possuem mais faturas?](#11-Quais-países-possuem-mais-faturas?)
     2. [Qual cidade tem os melhores clientes?](#12-Qual-cidade-tem-os-melhores-clientes)
     3. [Quem é o melhor cliente?](#13-Quem-é-o-melhor-cliente?)
 2. Conjunto de perguntas 02
-    1. [Use sua consulta para retornar o e-mail, nome, sobrenome e gênero de todos os ouvintes de Rock. Retorne sua lista ordenada alfabeticamente por endereço de e-mail, começando por A.](#21-Use-sua-consulta-para-retornar-o-e-mail,-nome,-sobrenome-e-gênero-de-todos-os-ouvintes-de-Rock.-Retorne-sua-lista-ordenada-alfabeticamente-por-endereço-de-e-mail,-começando-por-A)
+    1. [Retorne o e-mail, nome, sobrenome e gênero de todos os ouvintes de Rock. Retorne sua lista ordenada alfabeticamente por endereço de e-mail, começando por A.](#21-Retorne-o-e-mail,-nome,-sobrenome-e-gênero-de-todos-os-ouvintes-de-Rock)
     2. [Agora que sabemos que nossos clientes amam rock, podemos decidir quais músicos convidar para tocar no show](#22-Agora-que-sabemos-que-nossos-clientes-amam-rock,-podemos-decidir-quais-músicos-convidar-para-tocar-no-show)
     3.
         1. [Primeiro, descubra qual artista ganhou mais de acordo com InvoiceLines](#231-Primeiro,-descubra-qual-artista-ganhou-mais-de-acordo-com-InvoiceLines)
@@ -121,7 +121,8 @@ Result:
 -- 1 rows returned
 ```
 
-## 2.1. Use sua consulta para retornar o e-mail, nome, sobrenome e gênero de todos os ouvintes de Rock. Retorne sua lista ordenada alfabeticamente por endereço de e-mail, começando por A.
+## 2.1. Retorne o e-mail, nome, sobrenome e gênero de todos os ouvintes de Rock.
+Retorne sua lista ordenada alfabeticamente por endereço de e-mail, começando por A.
 >Você consegue encontrar um jeito de lidar com e-mails duplicados para que ninguém receba vários e-mails?
 
 Query:
@@ -277,7 +278,7 @@ Result:
 -- 5 rows returned
 ```
 
-## 2.3.2. Agora encontre qual cliente gastou mais com o artista que você encontrou acima
+## 2.3.2 Agora encontre qual cliente gastou mais com o artista que você encontrou acima
 Query:
 ```sql
 SELECT cus.CustomerId,
@@ -414,7 +415,7 @@ Result:
 -- 10 rows returned
 ```
 
-## 3.3 Qual cliente gastou mais em músicas por país.
+## 3.3. Qual cliente gastou mais em músicas por país.
 
 Query:
 
@@ -461,7 +462,7 @@ Result:
 -- 10 rows returned
 ```
 
-## 4.1 Quais são os gêneros musicais mais vendidos?
+## 4.1. Quais são os gêneros musicais mais vendidos?
 
 Query:
 
@@ -495,7 +496,7 @@ Result:
 -- 10 rows returned
 ```
 
-## 4.2 Qual é o volume de vendas do gênero Rock por país?
+## 4.2. Qual é o volume de vendas do gênero Rock por país?
 
 Query:
 
@@ -545,7 +546,7 @@ Result:
 -- 24 rows returned
 ```
 
-## 4.3 Média de vendas do gênero musical Rock, por trimestre.
+## 4.3. Média de vendas do gênero musical Rock, por trimestre.
 
 Query:
 
