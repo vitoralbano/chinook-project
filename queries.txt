@@ -42,3 +42,15 @@ JOIN
         
 ON genMax.BillingCountry = genData.BillingCountry AND genData.Purchases = genMax.GenreMax
 ORDER BY Purchases DESC;
+
+/* Query 3 - Artista mais populares do Rock */
+
+SELECT art.Name ArtistName,
+    COUNT(*) TrackCount
+FROM Track tra
+JOIN Album alb ON alb.AlbumId = tra.AlbumId
+JOIN Artist art ON art.ArtistId = alb.ArtistId
+JOIN Genre gen ON gen.GenreId = tra.GenreId AND gen.Name = 'Rock'
+GROUP BY 1
+ORDER BY TrackCount DESC
+LIMIT 10;
